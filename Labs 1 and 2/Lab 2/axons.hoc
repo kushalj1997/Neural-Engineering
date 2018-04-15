@@ -1,0 +1,55 @@
+// Kushal Jaligama
+// BIOMEDE 517 - Neural Engineering
+// Lab 2, Part 2
+// Multiple axons, multiple compartments
+
+// First Axon
+numParts = 1000
+create axon[numParts]
+for (i = 0; i < numParts; i = i + 1) {
+	axon[i] {
+		// define properties
+		L = 100
+		diam = 10
+		insert hh
+	}
+}
+
+for (i = 0; i < numParts - 1; i = i + 1) {
+	connect axon[i](1), axon[i + 1](0)
+}
+
+objectvar mystim
+// Technically have default section as axon, so no need for "axon mystyim = new...",
+// can be "mystim = new..."
+axon mystim = new IClamp(0) // Put at the start of the axon (start of first compartment)
+                              // Can also VClamp
+mystim.del = 100 // ms, Delay until stim turns on
+mystim.dur = 30 // ms, How long stim stays on
+mystim.amp = 4 // nA, from inside to outside membrane
+
+// Second Axon
+
+create axon2[numParts]
+for (i = 0; i < numParts; i = i + 1) {
+	axon2[i] {
+		// define properties
+		diam = 20
+		L = 100
+		insert hh
+	}
+}
+
+for (i = 0; i < numParts - 1; i = i + 1) {
+	connect axon2[i](1), axon2[i + 1](0)
+}
+
+objectvar mystim2
+axon2 mystim2 = new IClamp(0) // Put at the start of the axon (start of first compartment)
+                             // Can also VClamp
+mystim2.del = 500 // ms, Delay until stim turns on
+mystim2.dur = 2 // ms, How long stim stays on
+mystim2.amp = 10 // nA, from inside to outside membrane
+
+// Graph will stop printing at this time step:
+tstop = 1000 // ms, defaults to 5
